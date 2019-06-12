@@ -3,6 +3,9 @@
 from flask import Flask, abort, jsonify, make_response, request
 from cassandra.cluster import Cluster
 import json
+import re
+
+alphaNumPattern = '^[A-Za-z0-9_-]*$'
 
 cassandraCluster = Cluster(['127.0.0.1'])
 cassandraSession = cassandraCluster.connect("performo")
@@ -16,31 +19,51 @@ def not_found(error):
 @flaskApp.route('/matrices', methods=['GET'])
 def load_test_matrices():
     json = ''
-    rows = cassandraSession.execute("select * from test_matrix");
+    rows = cassandraSession.execute("select * from test_matrices");
     for row in rows:
         json += '{"log_stamp": "' + str(row[0]) + '",\n"matrix": ' + row[1] + '},\n'
     return '[' + json[0:json.__len__() - 2] + ']'
 
 @flaskApp.route('/matrices', methods=['POST'])
 def add_test_matrix():
+
     if not request.json:
         abort(400)
+
     data = request.json
     matrices = data['matrices']
-    jsonArray = []
+    dbJsonArray = []
+    resJsonArray = []
+
     for matrix in matrices:
-        jsonObject = {
-            'testUnitName': matrix['testUnitName'],
-            'duration': matrix['duration']
-        }
-        jsonArray.append(jsonObject)
 
-    jsonArrayAsResponse = jsonify({'matrices': jsonArray})
-    jsonArrayAsStr = json.dumps(jsonArray)
+        duration = str(matrix['duration'])
+        if duration.isnumeric():
+            duration = matrix['duration']
+        else:
+            duration = -1
 
-    cassandraSession.execute("insert into test_matrix (log_stamp, matrix) VALUES ( toTimestamp( now() ), '" + jsonArrayAsStr + "')");
+        if str(matrix['testUnitName']).isalnum() and re.match(alphaNumPattern, matrix['testUnitName']):
+            testUnitName = matrix['testUnitName']
+            jsonObject = {
+                'testUnitName': testUnitName,
+                'duration': duration
+            }
+            dbJsonArray.append(jsonObject)
+        else:
+            jsonObject = {
+                'error': "Test Unit named '" + matrix['testUnitName'] + "' with duration '" + str(duration) +
+                                "' is not alpha-numeric; hence, not persisted."
+            }
 
-    print(jsonArrayAsStr)
+        resJsonArray.append(jsonObject)
+
+    jsonArrayAsResponse = jsonify({'matrices': resJsonArray})
+    jsonArrayInDb = json.dumps(dbJsonArray)
+
+    cassandraSession.execute("insert into test_matrices (log_stamp, matrix) VALUES ( toTimestamp( now() ), '" + jsonArrayInDb + "')");
+
+    print(jsonArrayAsResponse)
 
     return jsonArrayAsResponse, 201
 

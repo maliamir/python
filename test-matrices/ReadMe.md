@@ -13,7 +13,7 @@ This is a simple flask (a python based micro web-framework) web-application whic
    export https_proxy="http://www-proxy.host.name.com:80"
 
 4. Install Flask:
-    /usr/local/bin/pip3.7 install flask
+   /usr/local/bin/pip3.7 install flask
 
 5. Install Cassandra:
    pip install cassandra-driver
@@ -33,14 +33,14 @@ This is a simple flask (a python based micro web-framework) web-application whic
 Or, if you don't need a background service you can just run:
      cassandra -f &
 
-5. Open cql via clash:
+5. Open cql via "cqlsh":
    - Create a new key space as:
        CREATE KEYSPACE IF NOT EXISTS performo WITH REPLICATION = { 'class' : 'NetworkTopologyStrategy', 'datacenter1' : 3 };
    - DESCRIBE keyspaces;
    - Create Table:
-       CREATE TABLE test_matrix (log_stamp timestamp PRIMARY KEY, matrix text);
+       CREATE TABLE test_matrices (log_stamp timestamp PRIMARY KEY, matrix text);
    - Insert a sample record:
-       INSERT INTO test_matrix (log_stamp, matrix) VALUES ( toTimestamp( now() ), '[ { "testUnitName":"ApplicationCreation", "duration":23194 }, { "testUnitName":"ApplicationDeletion", "duration": 5297 } ]');
+       INSERT INTO test_matrices (log_stamp, matrix) VALUES ( toTimestamp( now() ), '[ { "testUnitName":"ApplicationCreation", "duration":23194 }, { "testUnitName":"ApplicationDeletion", "duration": 5297 } ]');
 
 
 # Download & install IDE: PyCharm and run web-application
