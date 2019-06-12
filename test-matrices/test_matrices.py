@@ -1,7 +1,9 @@
 #!flask/bin/python
 
 from flask import Flask, abort, jsonify, make_response, request
+from flask_cors import CORS, cross_origin
 from cassandra.cluster import Cluster
+
 import json
 import re
 
@@ -11,12 +13,13 @@ cassandraCluster = Cluster(['127.0.0.1'])
 cassandraSession = cassandraCluster.connect("performo")
 
 flaskApp = Flask(__name__)
-
+cors = CORS(flaskApp)
 @flaskApp.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 
 @flaskApp.route('/matrices', methods=['GET'])
+@cross_origin()
 def load_test_matrices():
     json = ''
     rows = cassandraSession.execute("select * from test_matrices");
