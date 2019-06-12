@@ -53,16 +53,16 @@ def add_test_matrix():
         else:
             jsonObject = {
                 'error': "Test Unit named '" + matrix['testUnitName'] + "' with duration '" + str(duration) +
-                                "' is not alpha-numeric; hence, not persisted."
+                         "' is not alpha-numeric; hence, not persisted."
             }
 
         resJsonArray.append(jsonObject)
 
+    if len(dbJsonArray) > 0:
+        jsonArrayInDb = json.dumps(dbJsonArray)
+        cassandraSession.execute("insert into test_matrices (log_stamp, matrix) VALUES ( toTimestamp( now() ), '" + jsonArrayInDb + "')");
+
     jsonArrayAsResponse = jsonify({'matrices': resJsonArray})
-    jsonArrayInDb = json.dumps(dbJsonArray)
-
-    cassandraSession.execute("insert into test_matrices (log_stamp, matrix) VALUES ( toTimestamp( now() ), '" + jsonArrayInDb + "')");
-
     print(jsonArrayAsResponse)
 
     return jsonArrayAsResponse, 201
