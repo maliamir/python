@@ -44,7 +44,7 @@ Or, if you don't need a background service you can just run:
 
 2. Open this python project in PyCharm and then run "test_metrics.py”
 
-Both GET & POST are supported against end-point http://<host>:5000/matrices 
+Both GET & POST are supported against end-point http://host:5000/matrices 
 
 GET Sample Payload:
 `[  
