@@ -72,4 +72,4 @@ def add_test_matrix():
 
 
 if __name__ == '__main__':
-    flaskApp.run(host = '10.0.0.110',debug=True)
+    flaskApp.run(host='0.0.0.0')

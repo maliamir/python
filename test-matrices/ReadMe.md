@@ -35,14 +35,7 @@ This is a simple flask (a python based micro web-framework) web-application whic
 Or, if you don't need a background service you can just run:
      cassandra -f &
 
-5. Open cql via "cqlsh":
-   - Create a new key space as:
-       CREATE KEYSPACE IF NOT EXISTS performo WITH REPLICATION = { 'class' : 'NetworkTopologyStrategy', 'datacenter1' : 3 };
-   - DESCRIBE keyspaces;
-   - Create Table:
-       CREATE TABLE test_matrices (log_stamp timestamp PRIMARY KEY, matrix text);
-   - Insert a sample record:
-       INSERT INTO test_matrices (log_stamp, matrix) VALUES ( toTimestamp( now() ), '[ { "testUnitName":"ApplicationCreation", "duration":23194 }, { "testUnitName":"ApplicationDeletion", "duration": 5297 } ]');
+5. Run cqlsh -f cassandra_setup.cql. This will create kay space, table and one sample record.
 
 
 # Download & install IDE: PyCharm and run web-application
