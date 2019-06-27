@@ -77,7 +77,8 @@ GET Sample Payload:
   ]`
 
 POST Sample Payload:
-`“matrices”:[  
+`{
+   “matrices”:[  
          {  
             "testUnitName":"ApplicationCreation",
             "duration":53523
@@ -86,4 +87,5 @@ POST Sample Payload:
             "testUnitName":"ApplicationDeletion",
             "duration":3525235
          }
-      ]`
+      ]
+ }`
