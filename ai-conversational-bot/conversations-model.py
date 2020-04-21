@@ -132,7 +132,7 @@ def bag_of_words(sentence, words, show_details=True):
     return(np.array(bag))
 
 
-p = bag_of_words("Load blood pessure for patient", words)
+p = bag_of_words("Please give me more info", words)
 
 inputvar = pd.DataFrame([p], dtype=float, index=['input'])
 
